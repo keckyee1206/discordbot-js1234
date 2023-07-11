@@ -2,6 +2,17 @@ const Discord = require('discord.js');
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] })
 const dotenv = require('dotenv'); 
 dotenv.config();
+const wait = require('node:timers/promises').setTimeout;
+
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isChatInputCommand()) return;
+
+	if (interaction.commandName === 'ping') {
+		await interaction.deferReply();
+		await wait(4000);
+		await interaction.editReply('Pong!');
+	}
+});
 
 const sleep = (ms) => {
     return new Promise((r) => setTimeout(r, ms));
