@@ -51,6 +51,12 @@ client.on('messageCreate', msg => {
             msg.channel.send(`현재 서버의 이름은 ${msg.guild.name} 입니다.\n총 멤버 수는 ${msg.guild.memberCount} 명 입니다.`)
           }
 
+          if (message.content.startsWith('/roll')) {
+    const sides = message.content.split(' ')[1];
+    const result = Math.floor(Math.random() * sides) + 1;
+    message.reply(`주사위를 굴려 ${sides}면 주사위의 결과는 ${result}입니다!`);
+  }
+
         console.log(msg.content)
     } catch (e) {
         console.log(e);
