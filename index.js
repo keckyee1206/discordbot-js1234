@@ -1,76 +1,30 @@
-const Discord = require('discord.js');
-const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] })
-const dotenv = require('dotenv'); 
-dotenv.config();
-const wait = require('node:timers/promises').setTimeout;
-
-client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
-
-	if (interaction.commandName === 'ping') {
-		await interaction.deferReply();
-		await wait(4000);
-		await interaction.editReply('Pong!');
-	}
-});
-
+const { Client, Intents } = require('discord.js');
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const prefix="/";
 const sleep = (ms) => {
-    return new Promise((r) => setTimeout(r, ms));
+  return new Promise((r) => setTimeout(r, ms));
 }
-
-if (process.env.TOKEN == null) {
-    console.log("An discord token is empty.");
-    sleep(60000).then(() => console.log("Service is getting stopped automatically"));
-    return 0;
-}
-
-const discordLogin = async() => {
-    try {
-        await client.login(process.env.TOKEN);  
-    } catch (TOKEN_INVALID) {
-        console.log("An invalid token was provided");
-        sleep(60000).then(() => console.log("Service is getting stopped automatically"));
-    }
-}
-
-
-discordLogin();
-
 
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}.`);
+  console.log(`${client.user.tag}에 로그인하였습니다!`);
 });
 
-  
-client.on('messageCreate', msg => {
+client.on('messageCreate', (message) => {
+  if (message.content.startsWith('!ping')) {
+    message.reply('Pong!');
+  }
 
-    try { 
-        if (msg.content === process.env.PREFIX + 'call') msg.channel.send(`!callback`);
+  if (message.content.startsWith('!hello')) {
+    message.reply('안녕하세요!');
+  }
 
-        if (msg.content === process.env.PREFIX + 'avatar') msg.channel.send(msg.author.displayAvatarURL());
-        
-        if(msg.content === process.env.PREFIX + 'help') {
-            const embed = new Discord.MessageEmbed()
-            .setTitle("도움말")
-            .setColor('000') 
-            .setDescription('디스코드봇 테스트입니다.');
-
-            msg.reply({ embeds: [embed] })
-        }
-
-        if(msg.content === process.env.PREFIX + 'server') {
-            msg.channel.send(`현재 서버의 이름은 ${msg.guild.name} 입니다.\n총 멤버 수는 ${msg.guild.memberCount} 명 입니다.`)
-          }
-
-          if (message.content.startsWith('/roll')) {
+  if (message.content.startsWith('/roll')) {
     const sides = message.content.split(' ')[1];
     const result = Math.floor(Math.random() * sides) + 1;
     message.reply(`주사위를 굴려 ${sides}면 주사위의 결과는 ${result}입니다!`);
   }
 
-        console.log(msg.content)
-    } catch (e) {
-        console.log(e);
-    }
-    
+  // 추가적인 명령어를 여기에 작성하세요
 });
+
+client.login('MTExOTY1OTUwODA4NDUxODkxMg.G3kuXG.0tyrf9qlclNtrf6KpYOzo77v_ajVwKcdL3epkM');
